@@ -6,7 +6,7 @@
 #' @param verb progress messages. Default: FALSE
 #' @param retRes logical. Return gene pair socres & top-scoring gene pairs? Default: FALSE.
 #' @return sce Input sce with doublet scores added to colData as "cxds_score" column.
-#' @importFrom Matrix Matrix rowSums rowMeans
+#' @importFrom Matrix Matrix rowSums rowMeans t
 #' @import  SingleCellExperiment
 #' @importFrom SummarizedExperiment assay assay<- assays assays<- assayNames rowData rowData<- colData colData<-
 #' @importFrom S4Vectors SimpleList
@@ -33,20 +33,20 @@ cxds <- function( sce, ntop=500, binThresh=0, verb=FALSE, retRes=FALSE){
   ps    = Matrix::rowMeans(Bp)
   prb   = outer(ps,1-ps)
   prb   = prb + t(prb)
-  obs   = Bp %*% (1-t(Bp))
-  obs   = obs + t(obs)
+  obs   = Bp %*% (1-Matrix::t(Bp))
+  obs   = obs + Matrix::t(obs)
   #- log p-vals for the observed numbers of 01 and 10
   pvmat = stats::pbinom(as.matrix(obs)-1,prob=prb,size=ncol(Bp),lower.tail=FALSE,log=TRUE)
   #- scores
   if(verb) cat("-> calcluating cell scores\n")
-  scores = Matrix::diag(t(Bp)%*%pvmat%*%Bp)
+  scores = Matrix::diag(Matrix::t(Bp)%*%pvmat%*%Bp)
 
   if(retRes){
     if(verb) cat("-> prioritizing gene pairs\n")
     res = list(scores=-scores, S=-pvmat, hvg=hvg, binThresh=binThresh)
     #- rank gene pairs by wighted average doublet contribution
-    tmp = t(t(Bp) *(-scores))
-    tmp = tmp %*% t(Bp)
+    tmp = Matrix::t(Matrix::t(Bp) *(-scores))
+    tmp = tmp %*% Matrix::t(Bp)
     tmp = tmp * pvmat
     pvmat = as.matrix(tmp)
 
@@ -83,14 +83,15 @@ cxds <- function( sce, ntop=500, binThresh=0, verb=FALSE, retRes=FALSE){
 #'
 #' @param sce single cell experiment to analyze; needs "counts" in assays slot.
 #' @param n integer. The number of gene pairs to extract. Default: 100
+#' @importFrom Matrix t
 #' @return matrix Matrix with two colulmns, each containing gene indexes for gene pairs (rows).
 cxds_getTopPairs <- function(sce,n=100){
 #=======================================
 
   ind = rowData(sce)$cxds_hvg_ordr[!is.na(rowData(sce)$cxds_hvg_ordr)]
   Bp  = counts(sce)[ind,] > metadata(sce)$cxds_binThresh
-  imp = t(t(Bp) * sce$cxds_score)
-  imp = imp  %*% t(Bp)
+  imp = Matrix::t(Matrix::t(Bp) * sce$cxds_score)
+  imp = imp  %*% Matrix::t(Bp)
   imp = imp * metadata(sce)$cxds_S
   imp = as.matrix(imp)
   res = list(imp=imp)

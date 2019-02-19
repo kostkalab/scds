@@ -8,7 +8,7 @@
 #' @param nmax maximum number of training rounds; interger or "tune". Default: "tune"
 #' @param varImp shold variable (i.e., gene) importance be returned? Default: FALSE
 #' @return sce Input sce with doublet scores added to colData as "bcds_score" column, and possibly more (details)
-#' @importFrom Matrix Matrix rowSums rowMeans
+#' @importFrom Matrix Matrix rowSums rowMeans t
 #' @importFrom stats var predict
 #' @importFrom xgboost xgboost xgb.cv xgb.importance xgb.DMatrix
 #' @import  SingleCellExperiment
@@ -24,7 +24,7 @@ bcds <- function(sce,ntop=500,srat=1,verb=FALSE, retRes=FALSE, nmax="tune", varI
   #- select variable genes
   if(verb) cat("-> selecting genes\n")
   ind1            = Matrix::rowSums(counts(sce)>0)>0.01*ncol(sce)
-  lc              = t(log1p(counts(sce)[ind1,]))
+  lc              = Matrix::t(log1p(counts(sce)[ind1,]))
   lc              = lc/Matrix::rowMeans(lc)
   vrs             = apply(lc,2,stats::var)
   hvg             = order(vrs,decreasing=TRUE)[1:ntop]
@@ -35,7 +35,7 @@ bcds <- function(sce,ntop=500,srat=1,verb=FALSE, retRes=FALSE, nmax="tune", varI
   if(verb) cat("-> simulating doublets\n")
   p1  = sample(1:ncol(sce),srat*ncol(sce),replace=TRUE)
   p2  = sample(1:ncol(sce),srat*ncol(sce),replace=TRUE)
-  lc2 = t(log1p(counts(sce)[ind1,p1][hvg,] + counts(sce)[ind1,p2][hvg,]))
+  lc2 = Matrix::t(log1p(counts(sce)[ind1,p1][hvg,] + counts(sce)[ind1,p2][hvg,]))
   lc2 = lc2/Matrix::rowMeans(lc2)
   X   = rbind(lc,lc2)
 
@@ -81,7 +81,7 @@ bcds <- function(sce,ntop=500,srat=1,verb=FALSE, retRes=FALSE, nmax="tune", varI
     metadata(sce)$bcds_res_cv   = res
     metadata(sce)$bcds_res_all  = pre
     metadata(sce)$bcds_nmax     = nmax
-    vimp$gene_index              = hvg_ord[hvg_bool][vimp$col_index]
+    vimp$gene_index             = hvg_ord[hvg_bool][vimp$col_index]
     metadata(sce)$bcds_vimp     = vimp[1:100,-c(1,5)]
   }
 
