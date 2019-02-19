@@ -5,7 +5,7 @@
 #' @param binThresh more than this many counts to consider a gene present in a cell. Default: 0
 #' @param verb progress messages. Default: FALSE
 #' @param retRes logical. Return gene pair socres & top-scoring gene pairs? Default: FALSE.
-#' @return sce Input sce with doublet scores added to colData as "mg_dbl_score" column.
+#' @return sce Input sce with doublet scores added to colData as "cxds_score" column.
 #' @importFrom Matrix Matrix rowSums rowMeans
 #' @import  SingleCellExperiment
 #' @importFrom SummarizedExperiment assay assay<- assays assays<- assayNames rowData rowData<- colData colData<-
