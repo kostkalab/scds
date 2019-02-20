@@ -11,8 +11,8 @@ cxds_bcds_hybrid <- function(sce, cxds_args=NULL, bcds_args=NULL){
 #=================================================================
 
   #- check if we need to run cxds/bcds
-  if(is.null(colData(sce)$cxds_score)) sce = do.call(cxds,c(sce,cxds_args))
-  if(is.null(colData(sce)$bcds_score)) sce = do.call(bcds,c(sce,bcds_args))
+  if(is.null(colData(sce)$cxds_score)) sce = do.call(cxds,c(list(sce=sce),cxds_args))
+  if(is.null(colData(sce)$bcds_score)) sce = do.call(bcds,c(list(sce=sce),bcds_args))
 
   #- sqish and average scores
   s.cxds = sce$cxds_score - min(sce$cxds_score)
