@@ -28,18 +28,6 @@ sce = cxds_bcds_hybrid(sce)
 CD  = colData(sce)
 head(cbind(CD$cxds_score,CD$bcds_score, CD$hybrid_score))
 rm(CD)
-
-#- Visualize the top 5% annotated doublets
-plotDbl(sce, score="cxds_score",   frac=0.05)
-plotDbl(sce, score="bcds_score",   frac=0.05)
-plotDbl(sce, score="hybrid_score", frac=0.05)
-#- Or:
-library(scater)
-scater::plotTSNE(sce,col="hybrid_score")
-
-#- Visualize gene pairs contributing to doublet annotation:
-plotCxdsPairs(sce,n=5)
-
 ```
 
 #### Other doublet detection tools:
