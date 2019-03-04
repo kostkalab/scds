@@ -1,0 +1,75 @@
+---
+title: "scds:**s**ingle **c**ell **d**oublet **s**coring: In-silico doublet annotation for single cell RNA sequencing data"
+# shorttitle: "Introduction to scds"
+# author:
+# - name: Abha Bais
+#   affiliation: &id Department of Developmental Biology, University of Pittsburgh School of Medicine
+# - name: Dennis Kostka
+#   affiliation: *id Department of Computational and Systems Biology, Center for Evolutionary Biology and Medicine, University of Pittsburgh School of Medicine
+# date: "`r Sys.Date()`"
+# package: scds
+output:
+  BiocStyle::html_document: 
+   toc_float: false 
+  BiocStyle::pdf_document: default
+vignette: >
+  %\VignetteIndexEntry{Introduction to the scds package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %VignetteEncoding{UTF-8}
+---
+
+# Introduction
+In this vignette, we provide an overview of the basic functionality and usage of the `scds` package. It interfaces with the S4 ```SingleCellExperiment``` class [(see here)](https://doi.org/doi:10.18129/B9.bioc.SingleCellExperiment), so it should easily integrate into many ```R```/Bioconductor scRNA-seq analysis workflows. 
+
+
+# Installation
+
+Install the `scds` package from the host directory:
+
+```{r, eval = FALSE, echo = TRUE, message = FALSE, warning = FALSE}
+library(devtools)
+devtools::install_github('kostkalab/scds')
+
+```
+
+# Quick start
+
+`scds` takes as input a ```sce```, `SingleCellExperiment` object (`r Biocpkg("SingleCellExperiment")`) where the raw counts data is stored in the ```counts``` slot of the assay. 
+An example dataset created from the cell-hashing cell-lines data set (ch_cl) (https://satijalab.org/seurat/hashing_vignette.html) is included with the package.
+Note that `scds` works well with larger datasets (larger number of genes/cells), but for the purposes of this vignette, we work with a smaller example dataset.
+
+Get example data set provided with the package.
+
+```{r prelims, eval = FALSE, echo = TRUE, message = FALSE, warning = FALSE}
+library(SingleCellExperiment)
+load("sce-data.rda")
+dim(sce)
+
+```
+
+Run the three approaches on ```sce```.
+
+```{r example, eval = FALSE, echo = TRUE, message = FALSE, warning = FALSE}
+#- Annotate doublet using co-expression based doublet scoring:
+sce = cxds(sce)
+
+#- Annotate doublet using binary classification based doublet scoring:
+sce = bcds(sce)
+
+#- Combine both annotations into a hybrid annotation
+sce = cxds_bcds_hybrid(sce)
+
+#- Doublet scores are now available via colData:
+CD  = colData(sce)
+head(cbind(CD$cxds_score,CD$bcds_score, CD$hybrid_score))
+rm(CD)
+
+```
+
+# Session Info
+
+```{r, sessionInfo}
+sessionInfo()
+
+```
+

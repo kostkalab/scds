@@ -28,6 +28,7 @@ sce = cxds_bcds_hybrid(sce)
 CD  = colData(sce)
 head(cbind(CD$cxds_score,CD$bcds_score, CD$hybrid_score))
 rm(CD)
+
 ```
 
 #### Other doublet detection tools:

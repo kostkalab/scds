@@ -1,22 +1,26 @@
-#' Find doublets/multiples in UMI scRNA-seq data;
+#' Find doublets/multiplets in UMI scRNA-seq data;
 #'
-#' @param sce single cell experiment to analyze; needs "counts" in assays slot.
-#' @param ntop number of top variance genes to consider. Default: 500
-#' @param srat ratio between orginal "cells" and simulated doubltes; Default:1
+#' Annotates doublets/multiplets using a binary classification approach to 
+#' discriminate artificial doublets from original data.
+#'
+#' @param sce single cell experiment (\code{SingleCellExperiment}) object to analyze; needs \code{counts} in assays slot.
+#' @param ntop integer, indicating number of top variance genes to consider. Default: 500
+#' @param srat numeric, indicating ratio between orginal number of "cells" and simulated doublets; Default: 1
 #' @param verb progress messages. Default: FALSE
-#' @param retRes shuld the trained classifier be returned? Default: FALSE
-#' @param nmax maximum number of training rounds; interger or "tune". Default: "tune"
-#' @param varImp shold variable (i.e., gene) importance be returned? Default: FALSE
-#' @return sce Input sce with doublet scores added to colData as "bcds_score" column, and possibly more (details)
+#' @param retRes logical, should the trained classifier be returned? Default: FALSE
+#' @param nmax maximum number of training rounds; integer or "tune". Default: "tune"
+#' @param varImp logical, should variable (i.e., gene) importance be returned? Default: FALSE
+#' @return sce input sce object \code{SingleCellExperiment} with doublet scores added to colData as "bcds_score" column, and possibly more (details)
 #' @importFrom Matrix Matrix rowSums rowMeans t
 #' @importFrom stats var predict
 #' @importFrom xgboost xgboost xgb.cv xgb.importance xgb.DMatrix
-#' @import  SingleCellExperiment
+#' @import SingleCellExperiment
 #' @importFrom SummarizedExperiment assay assay<- assays assays<- assayNames rowData rowData<- colData colData<-
 #' @importFrom S4Vectors SimpleList
 #' @importFrom S4Vectors metadata 'metadata<-'
+#' @importFrom methods is
 #' @export
-bcds <- function(sce,ntop=500,srat=1,verb=FALSE, retRes=FALSE, nmax="tune", varImp=FALSE){
+bcds <- function(sce, ntop=500, srat=1, verb=FALSE, retRes=FALSE, nmax="tune", varImp=FALSE){
 #=========================================================================================
 
   if(!is(counts(sce),"sparseMatrix")) counts(sce) = Matrix::Matrix(counts(sce),sparse=TRUE)

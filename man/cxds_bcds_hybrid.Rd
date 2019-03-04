@@ -7,15 +7,15 @@
 cxds_bcds_hybrid(sce, cxds_args = NULL, bcds_args = NULL)
 }
 \arguments{
-\item{sce}{single cell experiment to analyze; needs "counts" in assays slot.}
+\item{sce}{single cell experiment (\code{SingleCellExperiment}) object to analyze; needs \code{counts} in assays slot.}
 
-\item{cxds_args}{list; Arguments for cxds function in list form. Default: NULL}
+\item{cxds_args}{list, arguments for cxds function in list form. Default: NULL}
 
-\item{bcds_args}{list; Arguments for bcds function in list form. Default: NULL}
+\item{bcds_args}{list, arguments for bcds function in list form. Default: NULL}
 }
 \value{
-sce Input sce with doublet scores added to colData as "hybrid_score" column.
+sce input sce object \code{SingleCellExperiment} with doublet scores added to colData as "hybrid_score" column.
 }
 \description{
-Find doublets/multiples in UMI scRNA-seq data;
+Annotates doublets/multiplets using the hybrid approach
 }

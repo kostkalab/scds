@@ -2,24 +2,24 @@
 % Please edit documentation in R/cxds.R
 \name{cxds}
 \alias{cxds}
-\title{Find doublets/multiples in UMI scRNA-seq data;}
+\title{Find doublets/multiplets in UMI scRNA-seq data;}
 \usage{
 cxds(sce, ntop = 500, binThresh = 0, verb = FALSE, retRes = FALSE)
 }
 \arguments{
-\item{sce}{single cell experiment to analyze; needs "counts" in assays slot.}
+\item{sce}{single cell experiment (\code{SingleCellExperiment}) object to analyze; needs \code{counts} in assays slot.}
 
-\item{ntop}{number of top variance genes to consider. Default: 500}
+\item{ntop}{integer, indicating number of top variance genes to consider. Default: 500}
 
-\item{binThresh}{more than this many counts to consider a gene present in a cell. Default: 0}
+\item{binThresh}{integer, minimum counts to consider a gene "present" in a cell. Default: 0}
 
 \item{verb}{progress messages. Default: FALSE}
 
-\item{retRes}{logical. Return gene pair socres & top-scoring gene pairs? Default: FALSE.}
+\item{retRes}{logical, whether to return gene pair scores & top-scoring gene pairs? Default: FALSE.}
 }
 \value{
-sce Input sce with doublet scores added to colData as "cxds_score" column.
+sce input sce object \code{SingleCellExperiment} with doublet scores added to colData as "cxds_score" column.
 }
 \description{
-Find doublets/multiples in UMI scRNA-seq data;
+Annotates doublets/multiplets using co-expression based approach
 }

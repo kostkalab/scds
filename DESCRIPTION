@@ -1,6 +1,6 @@
 Package: scds
 Type: Package
-Title: In-silico annotation of doublets for single cell RNA sequencing data
+Title: In-Silico Annotation of Doublets for Single Cell RNA Sequencing Data
 Version: 0.1.0
 Author: Dennis Kostka
 Maintainer: Dennis Kostka <kostka@pitt.edu>
@@ -10,10 +10,14 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
+Depends: R (>= 3.5.0)
 Imports: 
     Matrix,
     S4Vectors,
     SingleCellExperiment,
     SummarizedExperiment,
     xgboost,
+    methods,
     stats
+Suggests: BiocStyle, knitr
+VignetteBuilder: knitr

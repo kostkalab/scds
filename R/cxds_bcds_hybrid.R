@@ -1,10 +1,11 @@
-
 #' Find doublets/multiples in UMI scRNA-seq data;
 #'
-#' @param sce single cell experiment to analyze; needs "counts" in assays slot.
-#' @param cxds_args list; Arguments for cxds function in list form. Default: NULL
-#' @param bcds_args list; Arguments for bcds function in list form. Default: NULL
-#' @return sce Input sce with doublet scores added to colData as "hybrid_score" column.
+#' Annotates doublets/multiplets using the hybrid approach
+#' 
+#' @param sce single cell experiment (\code{SingleCellExperiment}) object to analyze; needs \code{counts} in assays slot.
+#' @param cxds_args list, arguments for cxds function in list form. Default: NULL
+#' @param bcds_args list, arguments for bcds function in list form. Default: NULL
+#' @return sce input sce object \code{SingleCellExperiment} with doublet scores added to colData as "hybrid_score" column.
 #' @import SingleCellExperiment
 #' @export
 cxds_bcds_hybrid <- function(sce, cxds_args=NULL, bcds_args=NULL){

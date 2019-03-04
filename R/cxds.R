@@ -1,13 +1,15 @@
-#' Find doublets/multiples in UMI scRNA-seq data;
+#' Find doublets/multiplets in UMI scRNA-seq data;
 #'
-#' @param sce single cell experiment to analyze; needs "counts" in assays slot.
-#' @param ntop number of top variance genes to consider. Default: 500
-#' @param binThresh more than this many counts to consider a gene present in a cell. Default: 0
+#' Annotates doublets/multiplets using co-expression based approach
+#' 
+#' @param sce single cell experiment (\code{SingleCellExperiment}) object to analyze; needs \code{counts} in assays slot.
+#' @param ntop integer, indicating number of top variance genes to consider. Default: 500
+#' @param binThresh integer, minimum counts to consider a gene "present" in a cell. Default: 0
 #' @param verb progress messages. Default: FALSE
-#' @param retRes logical. Return gene pair socres & top-scoring gene pairs? Default: FALSE.
-#' @return sce Input sce with doublet scores added to colData as "cxds_score" column.
+#' @param retRes logical, whether to return gene pair scores & top-scoring gene pairs? Default: FALSE.
+#' @return sce input sce object \code{SingleCellExperiment} with doublet scores added to colData as "cxds_score" column.
 #' @importFrom Matrix Matrix rowSums rowMeans t
-#' @import  SingleCellExperiment
+#' @import SingleCellExperiment
 #' @importFrom SummarizedExperiment assay assay<- assays assays<- assayNames rowData rowData<- colData colData<-
 #' @importFrom S4Vectors SimpleList
 #' @importFrom S4Vectors metadata 'metadata<-'

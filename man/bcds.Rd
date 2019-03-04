@@ -2,29 +2,30 @@
 % Please edit documentation in R/bcds.R
 \name{bcds}
 \alias{bcds}
-\title{Find doublets/multiples in UMI scRNA-seq data;}
+\title{Find doublets/multiplets in UMI scRNA-seq data;}
 \usage{
 bcds(sce, ntop = 500, srat = 1, verb = FALSE, retRes = FALSE,
   nmax = "tune", varImp = FALSE)
 }
 \arguments{
-\item{sce}{single cell experiment to analyze; needs "counts" in assays slot.}
+\item{sce}{single cell experiment (\code{SingleCellExperiment}) object to analyze; needs \code{counts} in assays slot.}
 
-\item{ntop}{number of top variance genes to consider. Default: 500}
+\item{ntop}{integer, indicating number of top variance genes to consider. Default: 500}
 
-\item{srat}{ratio between orginal "cells" and simulated doubltes; Default:1}
+\item{srat}{numeric, indicating ratio between orginal number of "cells" and simulated doublets; Default: 1}
 
 \item{verb}{progress messages. Default: FALSE}
 
-\item{retRes}{shuld the trained classifier be returned? Default: FALSE}
+\item{retRes}{logical, should the trained classifier be returned? Default: FALSE}
 
-\item{nmax}{maximum number of training rounds; interger or "tune". Default: "tune"}
+\item{nmax}{maximum number of training rounds; integer or "tune". Default: "tune"}
 
-\item{varImp}{shold variable (i.e., gene) importance be returned? Default: FALSE}
+\item{varImp}{logical, should variable (i.e., gene) importance be returned? Default: FALSE}
 }
 \value{
-sce Input sce with doublet scores added to colData as "bcds_score" column, and possibly more (details)
+sce input sce object \code{SingleCellExperiment} with doublet scores added to colData as "bcds_score" column, and possibly more (details)
 }
 \description{
-Find doublets/multiples in UMI scRNA-seq data;
+Annotates doublets/multiplets using a binary classification approach to 
+discriminate artificial doublets from original data.
 }
