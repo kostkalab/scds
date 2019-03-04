@@ -15,6 +15,9 @@
 #' @importFrom S4Vectors metadata 'metadata<-'
 #' @importFrom stats pbinom
 #' @export
+#' @examples 
+#' data("sce")
+#' sce = cxds(sce)
 cxds <- function( sce, ntop=500, binThresh=0, verb=FALSE, retRes=FALSE){
 #===========================================================================================
 

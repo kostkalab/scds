@@ -40,16 +40,17 @@ Note that `scds` works well with larger datasets (larger number of genes/cells),
 
 Get example data set provided with the package.
 
-```{r prelims, eval = FALSE, echo = TRUE, message = FALSE, warning = FALSE}
+```{r prelims, eval = TRUE, echo = TRUE, message = FALSE, warning = FALSE}
+library(scds)
 library(SingleCellExperiment)
-load("sce-data.rda")
+data("sce")
 dim(sce)
 
 ```
 
 Run the three approaches on ```sce```.
 
-```{r example, eval = FALSE, echo = TRUE, message = FALSE, warning = FALSE}
+```{r example, eval = TRUE, echo = TRUE, message = FALSE, warning = FALSE}
 #- Annotate doublet using co-expression based doublet scoring:
 sce = cxds(sce)
 

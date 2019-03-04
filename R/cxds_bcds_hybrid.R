@@ -8,6 +8,9 @@
 #' @return sce input sce object \code{SingleCellExperiment} with doublet scores added to colData as "hybrid_score" column.
 #' @import SingleCellExperiment
 #' @export
+#' @examples 
+#' data("sce")
+#' sce = cxds_bcds_hybrid(sce)
 cxds_bcds_hybrid <- function(sce, cxds_args=NULL, bcds_args=NULL){
 #=================================================================
 

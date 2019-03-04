@@ -8,24 +8,36 @@ bcds(sce, ntop = 500, srat = 1, verb = FALSE, retRes = FALSE,
   nmax = "tune", varImp = FALSE)
 }
 \arguments{
-\item{sce}{single cell experiment (\code{SingleCellExperiment}) object to analyze; needs \code{counts} in assays slot.}
+\item{sce}{single cell experiment (\code{SingleCellExperiment}) object to 
+analyze; needs \code{counts} in assays slot.}
 
-\item{ntop}{integer, indicating number of top variance genes to consider. Default: 500}
+\item{ntop}{integer, indicating number of top variance genes to consider. 
+Default: 500}
 
-\item{srat}{numeric, indicating ratio between orginal number of "cells" and simulated doublets; Default: 1}
+\item{srat}{numeric, indicating ratio between orginal number of "cells" and 
+simulated doublets; Default: 1}
 
 \item{verb}{progress messages. Default: FALSE}
 
-\item{retRes}{logical, should the trained classifier be returned? Default: FALSE}
+\item{retRes}{logical, should the trained classifier be returned? 
+Default: FALSE}
 
-\item{nmax}{maximum number of training rounds; integer or "tune". Default: "tune"}
+\item{nmax}{maximum number of training rounds; integer or "tune". 
 
-\item{varImp}{logical, should variable (i.e., gene) importance be returned? Default: FALSE}
+Default: "tune"}
+
+\item{varImp}{logical, should variable (i.e., gene) importance be returned? 
+Default: FALSE}
 }
 \value{
-sce input sce object \code{SingleCellExperiment} with doublet scores added to colData as "bcds_score" column, and possibly more (details)
+sce input sce object \code{SingleCellExperiment} with doublet scores 
+added to colData as "bcds_score" column, and possibly more (details)
 }
 \description{
 Annotates doublets/multiplets using a binary classification approach to 
 discriminate artificial doublets from original data.
+}
+\examples{
+data("sce")
+sce = bcds(sce)
 }
