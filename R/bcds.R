@@ -49,8 +49,8 @@ bcds <- function(sce, ntop=500, srat=1, verb=FALSE, retRes=FALSE, nmax="tune", v
 
   #- "simulated" doublets
   if(verb) cat("-> simulating doublets\n")
-  p1  = sample(seq_along(ncol(sce)),srat*ncol(sce),replace=TRUE)
-  p2  = sample(seq_along(ncol(sce)),srat*ncol(sce),replace=TRUE)
+  p1  = sample(seq_len(ncol(sce)),srat*ncol(sce),replace=TRUE)
+  p2  = sample(seq_len(ncol(sce)),srat*ncol(sce),replace=TRUE)
   lc2 = Matrix::t(log1p(counts(sce)[ind1,p1][hvg,] + counts(sce)[ind1,p2][hvg,]))
   lc2 = lc2/Matrix::rowMeans(lc2)
   X   = rbind(lc,lc2)
@@ -97,8 +97,10 @@ bcds <- function(sce, ntop=500, srat=1, verb=FALSE, retRes=FALSE, nmax="tune", v
     metadata(sce)$bcds_res_cv   = res
     metadata(sce)$bcds_res_all  = pre
     metadata(sce)$bcds_nmax     = nmax
-    vimp$gene_index             = hvg_ord[hvg_bool][vimp$col_index]
-    metadata(sce)$bcds_vimp     = vimp[1:100,-c(1,5)]
+    if(varImp){
+      vimp$gene_index             = hvg_ord[hvg_bool][vimp$col_index]
+      metadata(sce)$bcds_vimp     = vimp[1:100,-c(1,5)]
+    }
   }
 
   if(verb) cat("-> done.\n\n")
