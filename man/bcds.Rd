@@ -38,6 +38,6 @@ Annotates doublets/multiplets using a binary classification approach to
 discriminate artificial doublets from original data.
 }
 \examples{
-data("sce")
-sce = bcds(sce)
+data("sce_chcl")
+sce_chcl = bcds(sce_chcl)
 }

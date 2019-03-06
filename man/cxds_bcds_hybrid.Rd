@@ -20,6 +20,6 @@ sce input sce object \code{SingleCellExperiment} with doublet scores added to co
 Annotates doublets/multiplets using the hybrid approach
 }
 \examples{
-data("sce")
-sce = cxds_bcds_hybrid(sce)
+data("sce_chcl")
+sce_chcl = cxds_bcds_hybrid(sce_chcl)
 }

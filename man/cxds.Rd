@@ -24,6 +24,6 @@ sce input sce object \code{SingleCellExperiment} with doublet scores added to co
 Annotates doublets/multiplets using co-expression based approach
 }
 \examples{
-data("sce")
-sce = cxds(sce)
+data("sce_chcl")
+sce_chcl = cxds(sce_chcl)
 }

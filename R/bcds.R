@@ -30,8 +30,8 @@
 #' @importFrom methods is
 #' @export
 #' @examples 
-#' data("sce")
-#' sce = bcds(sce)
+#' data("sce_chcl")
+#' sce_chcl = bcds(sce_chcl)
 bcds <- function(sce, ntop=500, srat=1, verb=FALSE, retRes=FALSE, nmax="tune", varImp=FALSE){
 #=========================================================================================
 

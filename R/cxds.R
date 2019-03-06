@@ -16,8 +16,8 @@
 #' @importFrom stats pbinom
 #' @export
 #' @examples 
-#' data("sce")
-#' sce = cxds(sce)
+#' data("sce_chcl")
+#' sce_chcl = cxds(sce_chcl)
 cxds <- function( sce, ntop=500, binThresh=0, verb=FALSE, retRes=FALSE){
 #===========================================================================================
 

@@ -19,7 +19,7 @@ vignette: >
 ---
 
 # Introduction
-In this vignette, we provide an overview of the basic functionality and usage of the `scds` package. It interfaces with the S4 ```SingleCellExperiment``` class [(see here)](https://doi.org/doi:10.18129/B9.bioc.SingleCellExperiment), so it should easily integrate into many ```R```/Bioconductor scRNA-seq analysis workflows. 
+In this vignette, we provide an overview of the basic functionality and usage of the `scds` package, which interfaces with ``SingleCellExperiment`` objects.
 
 
 # Installation
@@ -34,37 +34,85 @@ devtools::install_github('kostkalab/scds')
 
 # Quick start
 
-`scds` takes as input a ```sce```, `SingleCellExperiment` object (`r Biocpkg("SingleCellExperiment")`) where the raw counts data is stored in the ```counts``` slot of the assay. 
-An example dataset created from the cell-hashing cell-lines data set (ch_cl) (https://satijalab.org/seurat/hashing_vignette.html) is included with the package.
-Note that `scds` works well with larger datasets (larger number of genes/cells), but for the purposes of this vignette, we work with a smaller example dataset.
+
+`scds` takes as input a `SingleCellExperiment` object (see here `r Biocpkg("SingleCellExperiment")`), where raw counts are stored in a ```counts``` assay, i.e. ```assay(sce,"counts")```. An example dataset created by sub-sampling the cell-hashing cell-lines data set (see  https://satijalab.org/seurat/hashing_vignette.html) is included with the package and accessible via ```data("sce")```.Note that `scds` is designed to workd with larger datasets, but for the purposes of this vignette, we work with a smaller example dataset. We apply ```scds``` to this data and compare/visualize reasults:
+
+## Example data set
 
 Get example data set provided with the package.
 
 ```{r prelims, eval = TRUE, echo = TRUE, message = FALSE, warning = FALSE}
 library(scds)
-library(SingleCellExperiment)
-data("sce")
+library(scater)
+library(rsvd)
+library(Rtsne)
+library(cowplot)
+set.seed(30519)
+data("sce_chcl")
+sce = sce_chcl #- less typing
 dim(sce)
 
 ```
 
-Run the three approaches on ```sce```.
+We see it contains 2,000 genes and 2,000 cells, 216 of which are identified as doublets:
 
-```{r example, eval = TRUE, echo = TRUE, message = FALSE, warning = FALSE}
+```{r doublets, eval = TRUE, echo = TRUE, message = FALSE, warning = FALSE}
+table(sce$hto_classification_global)
+```
+
+We can visualize the doublets after projecting into two dimensions:
+
+```{r proj, eval = TRUE, echo = TRUE, message = FALSE, warning = FALSE}
+logcounts(sce) = log1p(counts(sce))
+vrs            = apply(logcounts(sce),1,var)
+pc             = rpca(t(logcounts(sce)[order(vrs,decreasing=TRUE)[1:100],]))
+ts             = Rtsne(pc$x[,1:10],verb=FALSE)
+
+reducedDim(sce,"tsne") = ts$Y; rm(ts,vrs,pc)
+plotReducedDim(sce,"tsne",col="hto_classification_global")
+```
+
+## Computational doublet annotation
+
+We now run the ```scds``` doublet annotation appraoches ([see manuscript](https://doi.org/10.1101/564021)). We focus on ```cxds```, because ```bcds``` appears to work better for data sets with more cells.
+
+```{r scds, eval = TRUE, echo = TRUE, message = FALSE, warning = FALSE}
 #- Annotate doublet using co-expression based doublet scoring:
-sce = cxds(sce)
-
-#- Annotate doublet using binary classification based doublet scoring:
-sce = bcds(sce)
-
-#- Combine both annotations into a hybrid annotation
+sce = cxds(sce,retRes = TRUE)
+sce = bcds(sce,retRes = TRUE,verb=TRUE)
 sce = cxds_bcds_hybrid(sce)
+par(mfcol=c(1,3))
+boxplot(sce$cxds_score   ~ sce$doublet_true_labels, main="cxds")
+boxplot(sce$bcds_score   ~ sce$doublet_true_labels, main="bcds")
+boxplot(sce$hybrid_score ~ sce$doublet_true_labels, main="hybrid")
 
-#- Doublet scores are now available via colData:
-CD  = colData(sce)
-head(cbind(CD$cxds_score,CD$bcds_score, CD$hybrid_score))
-rm(CD)
+```
 
+## Visualizing gene pairs
+
+
+For ```cxds``` we can identify and visualize gene pairs driving doublet annoataions, with the expectation that the two genes in a pair might mark different types of cells ([see manuscript](https://doi.org/10.1101/564021)). In the following we look at the top three pairs, each gene pair is a row in the plot below:
+
+```{r pairplot, eval = TRUE, echo = TRUE, message = FALSE, warning = FALSE}
+top3 = metadata(sce)$cxds_topPairs[1:3,]
+rs   = rownames(sce)
+hb   = rowData(sce)$cxds_hvg_bool
+ho   = rowData(sce)$cxds_hvg_ordr[hb]
+hgs  = rs[ho]
+      
+l1 =  ggdraw() + draw_text("Pair 1", x = 0.5, y = 0.5)
+p1 = plotReducedDim(sce,"tsne",col=hgs[top3[1,1]])
+p2 = plotReducedDim(sce,"tsne",col=hgs[top3[1,2]])
+
+l2 =  ggdraw() + draw_text("Pair 2", x = 0.5, y = 0.5)
+p3 = plotReducedDim(sce,"tsne",col=hgs[top3[2,1]])
+p4 = plotReducedDim(sce,"tsne",col=hgs[top3[2,2]])
+
+l3 =  ggdraw() + draw_text("Pair 3", x = 0.5, y = 0.5)
+p5 = plotReducedDim(sce,"tsne",col=hgs[top3[3,1]])
+p6 = plotReducedDim(sce,"tsne",col=hgs[top3[3,2]])
+
+plot_grid(l1,p1,p2,l2,p3,p4,l3,p5,p6,ncol=3, rel_widths = c(1,2,2))
 ```
 
 # Session Info

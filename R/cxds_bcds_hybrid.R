@@ -9,8 +9,8 @@
 #' @import SingleCellExperiment
 #' @export
 #' @examples 
-#' data("sce")
-#' sce = cxds_bcds_hybrid(sce)
+#' data("sce_chcl")
+#' sce_chcl = cxds_bcds_hybrid(sce_chcl)
 cxds_bcds_hybrid <- function(sce, cxds_args=NULL, bcds_args=NULL){
 #=================================================================
 
