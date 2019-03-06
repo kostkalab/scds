@@ -7,7 +7,7 @@
 #### Installation
 
 ```
-devtools::install_github('kostkalab/scds')
+devtools::install_github('kostkalab/scds',ref="nBC")
 ```
 
 #### Quick Start
