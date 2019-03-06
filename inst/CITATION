@@ -1,0 +1,16 @@
+citHeader("To cite scds in publications use:")
+
+citEntry(entry = "Article",
+  title        = "scds: Computational Annotation of Doublets in Single Cell RNA Sequending Data",
+  author       = personList(as.person("Abha S Bais"),
+                   as.person("Dennis Kostka")),
+  journal      = "bioRxiv",
+  year         = "2019",
+  doi          = "https://doi.org/10.1101/564021",
+
+  textVersion  =
+  paste("AS Bais, D Kostkam (2019).",
+        "scds: Computational Annotation of Doublets in Single Cell RNA Sequending Data.",
+        "bioRxiv.",
+        "URL https://doi.org/10.1101/564021")
+)

@@ -1,14 +1,13 @@
 Package: scds
 Type: Package
 Title: In-Silico Annotation of Doublets for Single Cell RNA Sequencing Data
-Version: 0.1.0
+Version: 0.1.1
 Author: Dennis Kostka
 Maintainer: Dennis Kostka <kostka@pitt.edu>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
 biocViews: SingleCell, RNASeq, QualityControl, Preprocessing,
         Transcriptomics, GeneExpression, Sequencing, Software
 RoxygenNote: 6.1.1
