@@ -29,13 +29,15 @@
 #' @importFrom S4Vectors metadata 'metadata<-'
 #' @importFrom methods is
 #' @export
-#' @examples 
+#' @examples
 #' data("sce_chcl")
-#' sce_chcl = bcds(sce_chcl)
-bcds <- function(sce, ntop=500, srat=1, verb=FALSE, retRes=FALSE, nmax="tune", varImp=FALSE){
-#=========================================================================================
-
-  if(!is(counts(sce),"sparseMatrix")) counts(sce) = Matrix::Matrix(counts(sce),sparse=TRUE)
+#' ## create small data set using only 100 cells
+#' sce_chcl_small = sce_chcl[, 1:100]
+#' sce_chcl_small = bcds(sce_chcl_small)
+bcds <- function(sce, ntop=500, srat=1, verb=FALSE, retRes=FALSE,
+                 nmax="tune", varImp=FALSE){
+    if(!is(counts(sce),"sparseMatrix"))
+        counts(sce) = Matrix::Matrix(counts(sce),sparse=TRUE)
 
   #- select variable genes
   if(verb) cat("-> selecting genes\n")

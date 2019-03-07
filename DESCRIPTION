@@ -3,13 +3,16 @@ Type: Package
 Title: In-Silico Annotation of Doublets for Single Cell RNA Sequencing Data
 Version: 0.99.0
 Author: Dennis Kostka
+Authors@R: c(person("Dennis", "Kostka", role=c("aut", "cre"),
+        email="kostka@pitt.edu"), person("Bais", "Abha",
+        role=c("aut"), email="abhabais@pitt.edu"))
 Maintainer: Dennis Kostka <kostka@pitt.edu>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 License: MIT + file LICENSE
 Encoding: UTF-8
 biocViews: SingleCell, RNASeq, QualityControl, Preprocessing,
-        Transcriptomics, GeneExpression, Sequencing, Software
+        Transcriptomics, GeneExpression, Sequencing, Software, Classification
 RoxygenNote: 6.1.1
 Depends: R (>= 3.6.0)
 Imports: 
