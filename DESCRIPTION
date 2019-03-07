@@ -3,6 +3,9 @@ Type: Package
 Title: In-Silico Annotation of Doublets for Single Cell RNA Sequencing Data
 Version: 0.99.1
 Author: Dennis Kostka
+Authors@R: c(person("Dennis", "Kostka", role=c("aut", "cre"),
+        email="kostka@pitt.edu"), person("Bais", "Abha",
+        role=c("aut"), email="abhabais@pitt.edu"))
 Maintainer: Dennis Kostka <kostka@pitt.edu>
 Description: In single cell RNA sequencing (scRNA-seq) data combinations of cells are sometimes considered a single cell (doublets). The scds package provides methods to annotate doublets in scRNA-seq data computationally.
 
@@ -11,7 +14,7 @@ More about what it does (maybe more than one line)
 License: MIT + file LICENSE
 Encoding: UTF-8
 biocViews: SingleCell, RNASeq, QualityControl, Preprocessing,
-        Transcriptomics, GeneExpression, Sequencing, Software
+        Transcriptomics, GeneExpression, Sequencing, Software, Classification
 RoxygenNote: 6.1.1
 Depends: R (>= 3.6.0)
 Imports: 

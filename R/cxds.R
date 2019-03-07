@@ -17,7 +17,9 @@
 #' @export
 #' @examples 
 #' data("sce_chcl")
-#' sce_chcl = cxds(sce_chcl)
+#' ## create small data set using only 100 cells
+#' sce_chcl_small = sce_chcl[, 1:100]
+#' sce_chcl_small = cxds(sce_chcl_small)
 cxds <- function( sce, ntop=500, binThresh=0, verb=FALSE, retRes=FALSE){
 #===========================================================================================
 
