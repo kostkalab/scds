@@ -9,8 +9,8 @@ title: "scds:**s**ingle **c**ell **d**oublet **s**coring: In-silico doublet anno
 # date: "`r Sys.Date()`"
 # package: scds
 output:
-  BiocStyle::html_document: 
-   toc_float: false 
+  BiocStyle::html_document:
+   toc_float: false
   BiocStyle::pdf_document: default
 vignette: >
   %\VignetteIndexEntry{Introduction to the scds package}
@@ -24,7 +24,15 @@ In this vignette, we provide an overview of the basic functionality and usage of
 
 # Installation
 
-Install the `scds` package from the host directory:
+Install the `scds` package using Bioconductor:
+
+```{r, eval = FALSE, echo = TRUE, message = FALSE, warning = FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("scds", version = "3.9")
+```
+
+Or from github:
 
 ```{r, eval = FALSE, echo = TRUE, message = FALSE, warning = FALSE}
 library(devtools)
@@ -35,7 +43,7 @@ devtools::install_github('kostkalab/scds')
 # Quick start
 
 
-`scds` takes as input a `SingleCellExperiment` object (see here `r Biocpkg("SingleCellExperiment")`), where raw counts are stored in a ```counts``` assay, i.e. ```assay(sce,"counts")```. An example dataset created by sub-sampling the cell-hashing cell-lines data set (see  https://satijalab.org/seurat/hashing_vignette.html) is included with the package and accessible via ```data("sce")```.Note that `scds` is designed to workd with larger datasets, but for the purposes of this vignette, we work with a smaller example dataset. We apply ```scds``` to this data and compare/visualize reasults:
+`scds` takes as input a `SingleCellExperiment` object (see here `r BiocStyle::Biocpkg("SingleCellExperiment")`), where raw counts are stored in a ```counts``` assay, i.e. ```assay(sce,"counts")```. An example dataset created by sub-sampling the cell-hashing cell-lines data set (see  https://satijalab.org/seurat/hashing_vignette.html) is included with the package and accessible via ```data("sce")```.Note that `scds` is designed to workd with larger datasets, but for the purposes of this vignette, we work with a smaller example dataset. We apply ```scds``` to this data and compare/visualize reasults:
 
 ## Example data set
 
@@ -60,7 +68,7 @@ We see it contains 2,000 genes and 2,000 cells, 216 of which are identified as d
 table(sce$hto_classification_global)
 ```
 
-We can visualize the doublets after projecting into two dimensions:
+We can visualize cells/doublets after projecting into two dimensions:
 
 ```{r proj, eval = TRUE, echo = TRUE, message = FALSE, warning = FALSE}
 logcounts(sce) = log1p(counts(sce))
@@ -74,7 +82,7 @@ plotReducedDim(sce,"tsne",col="hto_classification_global")
 
 ## Computational doublet annotation
 
-We now run the ```scds``` doublet annotation appraoches ([see manuscript](https://doi.org/10.1101/564021)). We focus on ```cxds```, because ```bcds``` appears to work better for data sets with more cells.
+We now run the ```scds``` doublet annotation approaches. Briefly, we identify doublets in two complementary ways: `cxds` is based on co-expression of gene pairs and works with absence/presence calls only, while `bcds` uses the full count information and a binary classification approach using artificially generated doublets. `cxds_bcds_hybrid` combines both approaches, for more details please consult [(this manuscript)](https://doi.org/10.1101/564021). Each of the three methods returns a doublet score, with higher scores indicating more "doublet-like" barcodes.
 
 ```{r scds, eval = TRUE, echo = TRUE, message = FALSE, warning = FALSE}
 #- Annotate doublet using co-expression based doublet scoring:
@@ -99,7 +107,7 @@ rs   = rownames(sce)
 hb   = rowData(sce)$cxds_hvg_bool
 ho   = rowData(sce)$cxds_hvg_ordr[hb]
 hgs  = rs[ho]
-      
+
 l1 =  ggdraw() + draw_text("Pair 1", x = 0.5, y = 0.5)
 p1 = plotReducedDim(sce,"tsne",col=hgs[top3[1,1]])
 p2 = plotReducedDim(sce,"tsne",col=hgs[top3[1,2]])
@@ -108,7 +116,7 @@ l2 =  ggdraw() + draw_text("Pair 2", x = 0.5, y = 0.5)
 p3 = plotReducedDim(sce,"tsne",col=hgs[top3[2,1]])
 p4 = plotReducedDim(sce,"tsne",col=hgs[top3[2,2]])
 
-l3 =  ggdraw() + draw_text("Pair 3", x = 0.5, y = 0.5)
+l3 = ggdraw() + draw_text("Pair 3", x = 0.5, y = 0.5)
 p5 = plotReducedDim(sce,"tsne",col=hgs[top3[3,1]])
 p6 = plotReducedDim(sce,"tsne",col=hgs[top3[3,2]])
 
@@ -121,4 +129,3 @@ plot_grid(l1,p1,p2,l2,p3,p4,l3,p5,p6,ncol=3, rel_widths = c(1,2,2))
 sessionInfo()
 
 ```
-
