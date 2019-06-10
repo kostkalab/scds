@@ -14,13 +14,6 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 BiocManager::install("scds", version = "3.9")
 ```
 
-Or from github using `devtools`:
-
-```
-library(devtools)
-devtools::install_github('kostkalab/scds',ref="nBC")
-```
-
 #### Quick Start
 
 In the following ```sce``` is a ```SingleCellExperiment``` holding at least raw counts in an assay called ```counts```.
