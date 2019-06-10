@@ -6,20 +6,21 @@
 
 #### Installation
 
-You can install `scds` using [Bioconductor](https://bioconductor.org) (Release 3.9) as follows:
+You can install `scds` using [Bioconductor](https://bioconductor.org) (Devel Release 3.10) as follows:
 
 ```
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
-BiocManager::install("scds", version = "3.9")
+BiocManager::install("scds", version = "3.10")
 ```
 
-Or from github using `devtools`:
+Or directly from github using ```devtools```:
 
 ```
-library(devtools)
-devtools::install_github('kostkalab/scds',ref="nBC")
+devtools::install_github('kostkalab/scds',ref="master")
 ```
+
+
 
 #### Quick Start
 
