@@ -49,29 +49,29 @@ cxds <- function( sce, ntop=500, binThresh=0, verb=FALSE, retRes=FALSE){
   obs   = Bp %*% (1-Matrix::t(Bp))
   obs   = obs + Matrix::t(obs)
   #- log p-vals for the observed numbers of 01 and 10
-  pvmat = stats::pbinom(as.matrix(obs)-1,prob=prb,size=ncol(Bp),
+  S = stats::pbinom(as.matrix(obs)-1,prob=prb,size=ncol(Bp),
                         lower.tail=FALSE,log=TRUE)
   #- scores
   if(verb) message("-> calcluating cell scores\n")
-  scores = Matrix::diag(Matrix::t(Bp)%*%pvmat%*%Bp)
+  scores = Matrix::colSums(Bp * (S%*%Bp))
 
   if(retRes){
     if(verb) message("-> prioritizing gene pairs\n")
-    res = list(scores=-scores, S=-pvmat, hvg=hvg, binThresh=binThresh)
+    res = list(scores=-scores, S=-S, hvg=hvg, binThresh=binThresh)
     #- rank gene pairs by wighted average doublet contribution
     tmp = Matrix::t(Matrix::t(Bp) *(-scores))
     tmp = tmp %*% Matrix::t(Bp)
-    tmp = tmp * pvmat
-    pvmat = as.matrix(tmp)
+    tmp = tmp * S
+    S = as.matrix(tmp)
 
-    colnames(pvmat) = seq_len(ncol(pvmat))
-    rownames(pvmat) = colnames(pvmat)
+    colnames(S) = seq_len(ncol(S))
+    rownames(S) = colnames(S)
     topPrs = matrix(NA,nrow=100,ncol=2)
     for(i in seq_len(100)){
-      pr = which(pvmat == min(pvmat) ,arr.ind=TRUE)[c(1,2)]
-      topPrs[i,] = as.integer(colnames(pvmat)[pr])
-      pvmat = pvmat[-pr,]
-      pvmat = pvmat[,-pr]
+      pr = which(S == min(S) ,arr.ind=TRUE)[c(1,2)]
+      topPrs[i,] = as.integer(colnames(S)[pr])
+      S = S[-pr,]
+      S = S[,-pr]
     }
     res$topPairs = topPrs
 
@@ -82,9 +82,9 @@ cxds <- function( sce, ntop=500, binThresh=0, verb=FALSE, retRes=FALSE){
     hvg_ord[hvg_bool]            = res$hvg
     rowData(sce)$cxds_hvg_bool   = hvg_bool
     rowData(sce)$cxds_hvg_ordr   = hvg_ord
-    metadata(sce)$cxds_S         = res$S
-    metadata(sce)$cxds_topPairs  = res$topPairs
-    metadata(sce)$cxds_binThresh = res$binThresh
+    metadata(sce)$cxds$S         = res$S
+    metadata(sce)$cxds$topPairs  = res$topPairs
+    metadata(sce)$cxds$binThresh = res$binThresh
     sce$cxds_score               = res$scores
   } else{
     if(verb) message("-> done.\n\n")
@@ -103,10 +103,10 @@ cxds_getTopPairs <- function(sce,n=100){
 #=======================================
 
   ind = rowData(sce)$cxds_hvg_ordr[!is.na(rowData(sce)$cxds_hvg_ordr)]
-  Bp  = counts(sce)[ind,] > metadata(sce)$cxds_binThresh
+  Bp  = counts(sce)[ind,] > metadata(sce)$cxds$binThresh
   imp = Matrix::t(Matrix::t(Bp) * sce$cxds_score)
   imp = imp  %*% Matrix::t(Bp)
-  imp = imp * metadata(sce)$cxds_S
+  imp = imp * metadata(sce)$cxds$S
   imp = as.matrix(imp)
   res = list(imp=imp)
 
