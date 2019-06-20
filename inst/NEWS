@@ -1,6 +1,8 @@
+Changes in version 1.2.0, Bioconductor 3.10 Release (September 2019)
++ cxds performance improvement
++ Added heuristics to estimate number of doublets
+
 Changes in version 0.99.4 (2019-03-21)
 + Added NEWS file
 + Expanded readme
 + Expanded vignette
-
-

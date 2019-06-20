@@ -101,8 +101,9 @@ boxplot(sce$hybrid_score ~ sce$doublet_true_labels, main="hybrid")
 
 For ```cxds``` we can identify and visualize gene pairs driving doublet annoataions, with the expectation that the two genes in a pair might mark different types of cells ([see manuscript](https://doi.org/10.1101/564021)). In the following we look at the top three pairs, each gene pair is a row in the plot below:
 
-```{r pairplot, eval = TRUE, echo = TRUE, message = FALSE, warning = FALSE}
-top3 = metadata(sce)$cxds_topPairs[1:3,]
+```{r pairplot, eval = FALSE, echo = TRUE, message = FALSE, warning = FALSE}
+scds =
+top3 = metadata(sce)$cxds$topPairs[1:3,]
 rs   = rownames(sce)
 hb   = rowData(sce)$cxds_hvg_bool
 ho   = rowData(sce)$cxds_hvg_ordr[hb]
@@ -125,7 +126,7 @@ plot_grid(l1,p1,p2,l2,p3,p4,l3,p5,p6,ncol=3, rel_widths = c(1,2,2))
 
 # Session Info
 
-```{r, sessionInfo}
+```{r sessionInfo}
 sessionInfo()
 
 ```

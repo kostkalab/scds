@@ -4,18 +4,21 @@
 \alias{cxds}
 \title{Find doublets/multiplets in UMI scRNA-seq data;}
 \usage{
-cxds(sce, ntop = 500, binThresh = 0, verb = FALSE, retRes = FALSE)
+cxds(sce, ntop = 500, binThresh = 0, verb = FALSE, retRes = FALSE,
+  estNdbl = FALSE)
 }
 \arguments{
 \item{sce}{single cell experiment (\code{SingleCellExperiment}) object to analyze; needs \code{counts} in assays slot.}
 
-\item{ntop}{integer, indicating number of top variance genes to consider. Default: 500}
+\item{ntop}{integer, indimessageing number of top variance genes to consider. Default: 500}
 
 \item{binThresh}{integer, minimum counts to consider a gene "present" in a cell. Default: 0}
 
 \item{verb}{progress messages. Default: FALSE}
 
 \item{retRes}{logical, whether to return gene pair scores & top-scoring gene pairs? Default: FALSE.}
+
+\item{estNdbl}{logical, should the numer of doublets be estimated from the data. Enables doublet calls. Default:FALSE. Use with caution.}
 }
 \value{
 sce input sce object \code{SingleCellExperiment} with doublet scores added to colData as "cxds_score" column.

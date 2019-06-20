@@ -5,36 +5,38 @@
 \title{Find doublets/multiplets in UMI scRNA-seq data;}
 \usage{
 bcds(sce, ntop = 500, srat = 1, verb = FALSE, retRes = FALSE,
-  nmax = "tune", varImp = FALSE)
+  nmax = "tune", varImp = FALSE, estNdbl = FALSE)
 }
 \arguments{
-\item{sce}{single cell experiment (\code{SingleCellExperiment}) object to 
+\item{sce}{single cell experiment (\code{SingleCellExperiment}) object to
 analyze; needs \code{counts} in assays slot.}
 
-\item{ntop}{integer, indicating number of top variance genes to consider. 
+\item{ntop}{integer, indicating number of top variance genes to consider.
 Default: 500}
 
-\item{srat}{numeric, indicating ratio between orginal number of "cells" and 
+\item{srat}{numeric, indicating ratio between orginal number of "cells" and
 simulated doublets; Default: 1}
 
 \item{verb}{progress messages. Default: FALSE}
 
-\item{retRes}{logical, should the trained classifier be returned? 
+\item{retRes}{logical, should the trained classifier be returned?
 Default: FALSE}
 
-\item{nmax}{maximum number of training rounds; integer or "tune". 
+\item{nmax}{maximum number of training rounds; integer or "tune".
 
 Default: "tune"}
 
-\item{varImp}{logical, should variable (i.e., gene) importance be returned? 
+\item{varImp}{logical, should variable (i.e., gene) importance be returned?
 Default: FALSE}
+
+\item{estNdbl}{logical, should the numer of doublets be estimated from the data. Enables doublet calls. Default:FALSE. Use with caution.}
 }
 \value{
-sce input sce object \code{SingleCellExperiment} with doublet scores 
+sce input sce object \code{SingleCellExperiment} with doublet scores
 added to colData as "bcds_score" column, and possibly more (details)
 }
 \description{
-Annotates doublets/multiplets using a binary classification approach to 
+Annotates doublets/multiplets using a binary classification approach to
 discriminate artificial doublets from original data.
 }
 \examples{

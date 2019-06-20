@@ -4,14 +4,21 @@
 \alias{cxds_bcds_hybrid}
 \title{Find doublets/multiples in UMI scRNA-seq data;}
 \usage{
-cxds_bcds_hybrid(sce, cxds_args = NULL, bcds_args = NULL)
+cxds_bcds_hybrid(sce, cxdsArgs = NULL, bcdsArgs = NULL, verb = FALSE,
+  estNdbl = FALSE, force = FALSE)
 }
 \arguments{
 \item{sce}{single cell experiment (\code{SingleCellExperiment}) object to analyze; needs \code{counts} in assays slot.}
 
-\item{cxds_args}{list, arguments for cxds function in list form. Default: NULL}
+\item{cxdsArgs}{list, arguments for cxds function in list form. Default: NULL}
 
-\item{bcds_args}{list, arguments for bcds function in list form. Default: NULL}
+\item{bcdsArgs}{list, arguments for bcds function in list form. Default: NULL}
+
+\item{verb}{logical, switch on/off progress messages}
+
+\item{estNdbl}{logical, should the numer of doublets be estimated from the data. Enables doublet calls. Default:FALSE. Use with caution.}
+
+\item{force}{logical, force a (re)run of \code{cxds} and \code{bcds}. Default: FALSE}
 }
 \value{
 sce input sce object \code{SingleCellExperiment} with doublet scores added to colData as "hybrid_score" column.

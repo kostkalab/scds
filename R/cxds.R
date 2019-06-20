@@ -7,6 +7,7 @@
 #' @param binThresh integer, minimum counts to consider a gene "present" in a cell. Default: 0
 #' @param verb progress messages. Default: FALSE
 #' @param retRes logical, whether to return gene pair scores & top-scoring gene pairs? Default: FALSE.
+#' @param estNdbl logical, should the numer of doublets be estimated from the data. Enables doublet calls. Default:FALSE. Use with caution.
 #' @return sce input sce object \code{SingleCellExperiment} with doublet scores added to colData as "cxds_score" column.
 #' @importFrom Matrix Matrix rowSums rowMeans t
 #' @import SingleCellExperiment
@@ -20,7 +21,7 @@
 #' ## create small data set using only 100 cells
 #' sce_chcl_small = sce_chcl[, 1:100]
 #' sce_chcl_small = cxds(sce_chcl_small)
-cxds <- function( sce, ntop=500, binThresh=0, verb=FALSE, retRes=FALSE){
+cxds <- function( sce, ntop=500, binThresh=0, verb=FALSE, retRes=FALSE, estNdbl = FALSE){
 #===========================================================================================
 
   #- check sce argument
@@ -54,6 +55,21 @@ cxds <- function( sce, ntop=500, binThresh=0, verb=FALSE, retRes=FALSE){
   #- scores
   if(verb) message("-> calcluating cell scores\n")
   scores = Matrix::colSums(Bp * (S%*%Bp))
+  sce$cxds_score = -scores
+  #- estimate number of doublets
+  if(estNdbl){
+    if(verb) message("-> estimating number of doublets\n")
+    nsamp       = ncol(sce)
+    p1          = sample(seq_len(ncol(sce)),nsamp,replace=TRUE)
+    p2          = sample(seq_len(ncol(sce)),nsamp,replace=TRUE)
+    Bp_sim      = Bp[,p1] + Bp[,p2] #- still logical
+    scores_sim  = as.numeric(Matrix::colSums(Bp_sim * (S%*%Bp_sim)))
+    est_dbl     = get_dblCalls_ALL(-scores,-scores_sim, rel_loss=1)
+    if(is.null(metadata(sce)$cxds)) metadata(sce)$cxds = list()
+    metadata(sce)$cxds$ndbl       = est_dbl
+    metadata(sce)$cxds$sim_scores = -scores_sim
+    sce$cxds_call = sce$cxds_score >= est_dbl["balanced","threshold"]
+  }
 
   if(retRes){
     if(verb) message("-> prioritizing gene pairs\n")
@@ -85,10 +101,10 @@ cxds <- function( sce, ntop=500, binThresh=0, verb=FALSE, retRes=FALSE){
     metadata(sce)$cxds$S         = res$S
     metadata(sce)$cxds$topPairs  = res$topPairs
     metadata(sce)$cxds$binThresh = res$binThresh
-    sce$cxds_score               = res$scores
+    #sce$cxds_score               = res$scores
   } else{
     if(verb) message("-> done.\n\n")
-    sce$cxds_score = -scores;
+    #sce$cxds_score = -scores;
   }
   return(sce)
 }
