@@ -1,7 +1,7 @@
 Package: scds
 Type: Package
 Title: In-Silico Annotation of Doublets for Single Cell RNA Sequencing Data
-Version: 1.10.0
+Version: 1.11.0
 Authors@R: c(person("Dennis", "Kostka", role=c("aut", "cre"),
         email="kostka@pitt.edu"), person("Bais", "Abha",
         role=c("aut"), email="abhabais@pitt.edu"))
