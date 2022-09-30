@@ -77,7 +77,7 @@ pc             = rpca(t(logcounts(sce)[order(vrs,decreasing=TRUE)[1:100],]))
 ts             = Rtsne(pc$x[,1:10],verb=FALSE)
 
 reducedDim(sce,"tsne") = ts$Y; rm(ts,vrs,pc)
-plotReducedDim(sce,"tsne",col="hto_classification_global")
+plotReducedDim(sce,"tsne",color_by="hto_classification_global")
 ```
 
 ## Computational doublet annotation
@@ -110,16 +110,16 @@ ho   = rowData(sce)$cxds_hvg_ordr[hb]
 hgs  = rs[ho]
 
 l1 =  ggdraw() + draw_text("Pair 1", x = 0.5, y = 0.5)
-p1 = plotReducedDim(sce,"tsne",col=hgs[top3[1,1]])
-p2 = plotReducedDim(sce,"tsne",col=hgs[top3[1,2]])
+p1 = plotReducedDim(sce,"tsne",color_by=hgs[top3[1,1]])
+p2 = plotReducedDim(sce,"tsne",color_by=hgs[top3[1,2]])
 
 l2 =  ggdraw() + draw_text("Pair 2", x = 0.5, y = 0.5)
-p3 = plotReducedDim(sce,"tsne",col=hgs[top3[2,1]])
-p4 = plotReducedDim(sce,"tsne",col=hgs[top3[2,2]])
+p3 = plotReducedDim(sce,"tsne",color_by=hgs[top3[2,1]])
+p4 = plotReducedDim(sce,"tsne",color_by=hgs[top3[2,2]])
 
 l3 = ggdraw() + draw_text("Pair 3", x = 0.5, y = 0.5)
-p5 = plotReducedDim(sce,"tsne",col=hgs[top3[3,1]])
-p6 = plotReducedDim(sce,"tsne",col=hgs[top3[3,2]])
+p5 = plotReducedDim(sce,"tsne",color_by=hgs[top3[3,1]])
+p6 = plotReducedDim(sce,"tsne",color_by=hgs[top3[3,2]])
 
 plot_grid(l1,p1,p2,l2,p3,p4,l3,p5,p6,ncol=3, rel_widths = c(1,2,2))
 ```
