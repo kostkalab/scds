@@ -92,7 +92,7 @@ bcds <- function(sce, ntop=500, srat=1, verb=FALSE, retRes=FALSE,
     res = xgb.cv(data =mm, nthread = 2, nrounds = 500, objective = "binary:logistic",
                  nfold=5,metrics=list("error"),prediction=TRUE,
                  early_stopping_rounds=2, tree_method="hist",subsample=0.5,verbose=0)
-    ni  = res$best_iteration
+    ni  = res$early_stop$best_iteration
     ac  = res$evaluation_log$test_error_mean[ni] + 1*res$evaluation_log$test_error_std[ni]
     ni  = min(which( res$evaluation_log$test_error_mean <= ac  ))
     nmax = ni
