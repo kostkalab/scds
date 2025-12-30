@@ -74,9 +74,29 @@ bcds <- function(sce, ntop=500, srat=1, verb=FALSE, retRes=FALSE,
     res    = NA
     varImp = FALSE
     retRes = FALSE
-    pre    = xgboost(mm,nrounds=nmax,tree_method="hist",
+    
+    if(packageVersion("xgboost")$major < 2) {
+      pre    = xgboost(mm,nrounds=nmax,tree_method="hist",
                      nthread = 2, early_stopping_rounds = 2, subsample=0.5,
                      objective = "binary:logistic",verbose=0)
+    } else {
+      # newer xgboost code
+      params <- list(
+        tree_method = "hist",
+        nthread = 2,
+        subsample = 0.5,
+        objective = "binary:logistic"
+      )
+      pre = xgboost::xgb.train(
+        params = params,
+        data = mm,
+        nrounds = nmax,
+        watchlist = list(train = mm),
+        early_stopping_rounds = 2,
+        verbose = 0
+      )    
+    }  
+
     sce$bcds_score = stats::predict(pre, newdat= mm[seq_len(ncol(sce)),])
     #- get doublet calls
     if(estNdbl){
@@ -89,17 +109,65 @@ bcds <- function(sce, ntop=500, srat=1, verb=FALSE, retRes=FALSE,
     }
   #- learning rounds with CV:
   } else {
-    res = xgb.cv(data =mm, nthread = 2, nrounds = 500, objective = "binary:logistic",
-                 nfold=5,metrics=list("error"),prediction=TRUE,
-                 early_stopping_rounds=2, tree_method="hist",subsample=0.5,verbose=0)
-    ni  = res$best_iteration
-    ac  = res$evaluation_log$test_error_mean[ni] + 1*res$evaluation_log$test_error_std[ni]
-    ni  = min(which( res$evaluation_log$test_error_mean <= ac  ))
-    nmax = ni
-    pre = xgboost(mm,nrounds=nmax,tree_method="hist",
+
+    if(packageVersion("xgboost")$major < 2) {
+      res = xgb.cv(data =mm, nthread = 2, nrounds = 500, objective = "binary:logistic",
+                   nfold=5,metrics=list("error"),prediction=TRUE,
+                   early_stopping_rounds=2, tree_method="hist",subsample=0.5,verbose=0)
+      ni  = res$best_iteration
+      ac  = res$evaluation_log$test_error_mean[ni] + 1*res$evaluation_log$test_error_std[ni]
+      ni  = min(which( res$evaluation_log$test_error_mean <= ac  ))
+      nmax = ni
+      pre = xgboost(mm,nrounds=nmax,tree_method="hist",
                   nthread = 2, early_stopping_rounds = 2, subsample=0.5,
                   objective = "binary:logistic",verbose=0)
-    sce$bcds_score = res$pred[seq_len(ncol(sce))]
+      sce$bcds_score = res$pred[seq_len(ncol(sce))]
+    } else {
+
+      cv_params <- list(
+        objective = "binary:logistic",
+        tree_method = "hist",
+        subsample = 0.5,
+        nthread = 2
+      )
+
+      res = xgb.cv(
+        params = cv_params,
+        data = mm,
+        nrounds = 500,
+        nfold = 5,
+        metrics = list("error"),
+        prediction = TRUE,
+        early_stopping_rounds = 2,
+        verbose = 0
+      )    
+    
+      ni  = res$early_stop$best_iteration
+      if(is.null(ni)) {
+        ni = which.min(res$evaluation_log$test_error_mean)
+      }
+      ac  = res$evaluation_log$test_error_mean[ni] + 1*res$evaluation_log$test_error_std[ni]
+      ni = min(which( res$evaluation_log$test_error_mean <= ac  ))
+      nmax = ni
+
+      params <- list(
+        tree_method = "hist",
+        nthread = 2,
+        subsample = 0.5,
+        objective = "binary:logistic"
+      )
+    
+      pre = xgboost::xgb.train(
+        params = params,
+        data = mm,
+        nrounds = nmax,
+        evals = list(train = mm),
+        early_stopping_rounds = 2,
+        verbose = 0
+      ) 
+      sce$bcds_score = res$cv_predict$pred[seq_len(ncol(sce))]
+    }
+
     #- get doublet calls
     if(estNdbl){
       dbl.pre = stats::predict(pre, newdat= mm[seq(ncol(sce)+1,nrow(X)),])
