@@ -75,15 +75,15 @@ bcds <- function(sce, ntop=500, srat=1, verb=FALSE, retRes=FALSE,
     varImp = FALSE
     retRes = FALSE
     
-    if(packageVersion("xgboost")$major < 2) {
+    if(utils::packageVersion("xgboost")$major < 2) {
       pre    = xgboost(mm,nrounds=nmax,tree_method="hist",
-                     nthread = 2, early_stopping_rounds = 2, subsample=0.5,
+                     nthreads = 2, early_stopping_rounds = 2, subsample=0.5,
                      objective = "binary:logistic",verbose=0)
     } else {
       # newer xgboost code
       params <- list(
         tree_method = "hist",
-        nthread = 2,
+        nthreads = 2,
         subsample = 0.5,
         objective = "binary:logistic"
       )
@@ -110,8 +110,8 @@ bcds <- function(sce, ntop=500, srat=1, verb=FALSE, retRes=FALSE,
   #- learning rounds with CV:
   } else {
 
-    if(packageVersion("xgboost")$major < 2) {
-      res = xgb.cv(data =mm, nthread = 2, nrounds = 500, objective = "binary:logistic",
+    if(utils::packageVersion("xgboost")$major < 2) {
+      res = xgb.cv(data = mm, nthreads = 2, nrounds = 500, objective = "binary:logistic",
                    nfold=5,metrics=list("error"),prediction=TRUE,
                    early_stopping_rounds=2, tree_method="hist",subsample=0.5,verbose=0)
       ni  = res$best_iteration
@@ -119,7 +119,7 @@ bcds <- function(sce, ntop=500, srat=1, verb=FALSE, retRes=FALSE,
       ni  = min(which( res$evaluation_log$test_error_mean <= ac  ))
       nmax = ni
       pre = xgboost(mm,nrounds=nmax,tree_method="hist",
-                  nthread = 2, early_stopping_rounds = 2, subsample=0.5,
+                  nthreads = 2, early_stopping_rounds = 2, subsample=0.5,
                   objective = "binary:logistic",verbose=0)
       sce$bcds_score = res$pred[seq_len(ncol(sce))]
     } else {
@@ -128,7 +128,7 @@ bcds <- function(sce, ntop=500, srat=1, verb=FALSE, retRes=FALSE,
         objective = "binary:logistic",
         tree_method = "hist",
         subsample = 0.5,
-        nthread = 2
+        nthreads = 2
       )
 
       res = xgb.cv(
@@ -152,7 +152,7 @@ bcds <- function(sce, ntop=500, srat=1, verb=FALSE, retRes=FALSE,
 
       params <- list(
         tree_method = "hist",
-        nthread = 2,
+        nthreads = 2,
         subsample = 0.5,
         objective = "binary:logistic"
       )
