@@ -4,8 +4,16 @@
 \alias{bcds}
 \title{Find doublets/multiplets in UMI scRNA-seq data;}
 \usage{
-bcds(sce, ntop = 500, srat = 1, verb = FALSE, retRes = FALSE,
-  nmax = "tune", varImp = FALSE, estNdbl = FALSE)
+bcds(
+  sce,
+  ntop = 500,
+  srat = 1,
+  verb = FALSE,
+  retRes = FALSE,
+  nmax = "tune",
+  varImp = FALSE,
+  estNdbl = FALSE
+)
 }
 \arguments{
 \item{sce}{single cell experiment (\code{SingleCellExperiment}) object to
