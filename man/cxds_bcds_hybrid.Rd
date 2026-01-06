@@ -4,8 +4,14 @@
 \alias{cxds_bcds_hybrid}
 \title{Find doublets/multiples in UMI scRNA-seq data;}
 \usage{
-cxds_bcds_hybrid(sce, cxdsArgs = NULL, bcdsArgs = NULL, verb = FALSE,
-  estNdbl = FALSE, force = FALSE)
+cxds_bcds_hybrid(
+  sce,
+  cxdsArgs = NULL,
+  bcdsArgs = NULL,
+  verb = FALSE,
+  estNdbl = FALSE,
+  force = FALSE
+)
 }
 \arguments{
 \item{sce}{single cell experiment (\code{SingleCellExperiment}) object to analyze; needs \code{counts} in assays slot.}

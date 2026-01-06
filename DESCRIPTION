@@ -10,7 +10,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 biocViews: SingleCell, RNASeq, QualityControl, Preprocessing,
         Transcriptomics, GeneExpression, Sequencing, Software, Classification
-RoxygenNote: 6.1.1
+RoxygenNote: 7.3.3
 Depends: R (>= 3.6.0)
 Imports:
     Matrix,

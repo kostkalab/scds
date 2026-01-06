@@ -4,8 +4,14 @@
 \alias{cxds}
 \title{Find doublets/multiplets in UMI scRNA-seq data;}
 \usage{
-cxds(sce, ntop = 500, binThresh = 0, verb = FALSE, retRes = FALSE,
-  estNdbl = FALSE)
+cxds(
+  sce,
+  ntop = 500,
+  binThresh = 0,
+  verb = FALSE,
+  retRes = FALSE,
+  estNdbl = FALSE
+)
 }
 \arguments{
 \item{sce}{single cell experiment (\code{SingleCellExperiment}) object to analyze; needs \code{counts} in assays slot.}
